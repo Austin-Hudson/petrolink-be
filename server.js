@@ -8,19 +8,44 @@ var lineArray = [];
 var squareArray = [];
 var circleArray = [];
 var triangleArray = [];
+var userArray = [];
+var userNum = 1;
 
 io.on('connection', function(socket){
 
-  //user has connected
-  // socket.on('user_connected', function(data){
+  let socketID = socket.id;
+  let currentUser = "";
 
-    // let user = data.user;
-    io.emit('user_connected', {loginMessage: " a user has connected" });
-  // });
+  //add unique user to userArray
+  userArray.push({[socketID]: "User-" + userNum});
+  userNum++;
+
+  //filter particular user
+  userArray.filter(function(user){
+      if(Object.keys(user) == socketID){
+        for(val in user){
+          currentUser = user[val];
+        }
+      }
+  });
+
+
+  //user has connected
+  io.emit('user_connected', {loginMessage: currentUser + " has connected" });
+
 
   //user has disconnected
   socket.on('disconnect', function(){
-    io.emit('user-disconnect', {disconnectMessage: "a user disconnected"});
+
+    userArray.filter(function(user, index){
+        if(Object.keys(user) == socket.id){
+          for(val in user){
+            currentUser = user[val];
+          }
+          userArray.splice(index, 1);
+        }
+    });
+    io.emit('user-disconnect', {disconnectMessage: currentUser + " has disconnected"});
   });
 
  //update new client with current drawing that has been drawn
