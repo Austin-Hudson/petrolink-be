@@ -12,11 +12,15 @@ var triangleArray = [];
 io.on('connection', function(socket){
 
   //user has connected
-  io.emit('user_connected', {message: "a user has connected"});
+  // socket.on('user_connected', function(data){
+
+    // let user = data.user;
+    io.emit('user_connected', {loginMessage: " a user has connected" });
+  // });
 
   //user has disconnected
   socket.on('disconnect', function(){
-    io.emit('user-disconnect', {message: "a user disconnected"});
+    io.emit('user-disconnect', {disconnectMessage: "a user disconnected"});
   });
 
  //update new client with current drawing that has been drawn
